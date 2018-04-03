@@ -1,6 +1,6 @@
-# testv
+# RPS UI
 
-> A Vue.js project
+> RPS UI powered by Vue.js
 
 ## Build Setup
 

@@ -1,7 +1,7 @@
 {
-  "name": "testv",
+  "name": "rps-ui",
   "version": "1.0.0",
-  "description": "A Vue.js project",
+  "description": "RPS UI powered by Vue.js",
   "author": "Gevorg Aznauryan <gazilius@gmail.com>",
   "private": true,
   "scripts": {

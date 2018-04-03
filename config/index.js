@@ -5,13 +5,19 @@
 
 const path = require('path')
 
+const basedir = '/Users/GAZ/projects/web/view/site/modules/desktop/games/rps/dist/' ;
+//const basedir = __dirname ;
+const baseurl = '/files/modules/desktop/games/rps/dist/' ;
+//const baseurl = '/' ;
+
+
 module.exports = {
   build: {
     env: require('./prod.env'),
-    index: path.resolve(__dirname, '../dist/index.html'),
-    assetsRoot: path.resolve(__dirname, '../dist'),
+    index: path.resolve(basedir, '../dist/rps.html'),
+    assetsRoot: path.resolve(basedir, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: baseurl,
     productionSourceMap: true,
     // Gzip off by default as many popular static hosts such as
     // Surge or Netlify already gzip all static assets for you.

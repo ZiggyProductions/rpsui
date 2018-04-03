@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <defs>
+        <style>
+            .cls-1{fill:none;}
+            .cls-2{fill:#9bc930;}
+            .cls-3{fill:#6f7c22;}
+            .cls-4,.cls-6{fill:#090a0f;}
+            .cls-5{fill:#fff;opacity:0.2;}
+            .cls-6{opacity:0.4;}</style>
+    </defs>
+    <title>coin</title>
+    <path class="cls-1" d="M0,0H100V100H0Z"/>
+        <circle class="cls-2" cx="50" cy="50" r="50"/>
+        <circle class="cls-3" cx="50" cy="50" r="41.67"/>
+        <text class="coin-text" x="50" y="62" font-family="Verdana" font-size="30" font-weight="bold">
+            <tspan text-anchor="middle">300</tspan>
+        </text>
+        <span>300</span>
+        <path class="cls-5" d="M97.11,33.28C86.67,43.39,69.44,50,50,50S13.33,43.39,2.89,33.33A49.89,49.89,0,0,1,50,0a44.83,44.83,0,0,1,6.17.39,46,46,0,0,1,8.72,1.89A49.89,49.89,0,0,1,97.11,33.28Z"/>
+        <path class="cls-6" d="M90.47,59.72a41.64,41.64,0,0,1-80.94.22A47.41,47.41,0,0,0,36.08,82.67a40.05,40.05,0,0,0,8.11,1.89,39.81,39.81,0,0,0,5.78.39C67.36,84.94,82.47,74.78,90.47,59.72Z"/>
+</svg>

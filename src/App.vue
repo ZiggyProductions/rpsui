@@ -1,50 +1,51 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-
-    {{ message }}
-    {{ count }}
-    <p>
-      <button @click="increment">+</button>
-      <button @click="decrement">-</button>
-      <button @click="addIcon">add</button>
-    </p>
-    <hello-world/>
+  <div align="center">
+    <div id="rps-inner-app">
+      <Lobby v-if="inlobby"/>
+      <GameTable v-if="inplay" />
+      <FooterLinks v-if="inlobby || intro"/>
+      <Help v-if="popup_help"/>
+      <Message v-if="message"/>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld'
+import Lobby from './components/Lobby'
+import GameTable from './components/GameTable'
+import FooterLinks from './components/FooterLinks'
+import Help from './components/Help'
+import Message from './components/Message'
 
 export default {
-  name: 'app',
+  name: 'rps-inner-app',
   components: {
-    HelloWorld
-  },
-  data: function(){
-    return {
-      message: '123'
-    }
+    Lobby, GameTable, FooterLinks, Help, Message
   },
   computed: {
-      count : function(){return this.$store.state.count}
+      count : function(){return this.$store.state.count},
+      inplay : function(){return this.$store.state.game_state == 'inplay'},
+      inlobby : function(){return this.$store.state.game_state == 'inlobby'},
+      intro : function(){return this.$store.state.game_state == 'intro'},
+      inhelp : function(){return this.$store.state.game_state == 'inhelp'},
+      message : function(){return this.$store.state.message.show},
+      popup_help : function(){return this.$store.state.popup_help}
   },
-  methods:{
-    increment: function(){this.$store.commit('increment')},
-    decrement: function(){this.$store.commit('decrement')},
-    addIcon: function(){this.$store.commit('addIcon')}
-  }
 
 }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  body {padding-top: 20px;}
+  #rps-inner-app{
+    margin-top:60px;
+    background-image: url('assets/bg-min.png');
+    background-repeat: no-repeat;
+    width: 1030px;
+    height: 654px;
+    border: solid 2px rgba(74,104,133,.2);
+    border-radius: 5px;
+    position: relative;
+  }
+  a {cursor:pointer;}
 </style>
