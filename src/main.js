@@ -3,7 +3,9 @@
 import Vue from 'vue'
 import App from './App'
 import store from './store'
-
+//import ds from 'deepstream.io-client-js'
+import VueResource from 'vue-resource';
+Vue.use(VueResource);
 Vue.config.productionTip = false
 
 window.bus = new Vue();
@@ -14,9 +16,9 @@ window.rpsapp = new Vue({
   components: { App },
   store,
   created: function(){
-    // console.log('TOKEN:',window.rps_token)
+    //console.log('TOKEN:',window.rps_token)
     var _this = this;
-    // _this.init();
+    this.init();
     bus.$on('sit',function(bet){
       _this.sit(bet);
     })
@@ -84,31 +86,45 @@ window.rpsapp = new Vue({
     },
     init:function (binding) {
       var _this = this;
-      setTimeout(function(){
-        var config = {
-          host: '127.0.0.1',
-          port: 8080,
-          zone: "rps",
-          debug: true,
-          onResponse: _this.onResponse,
-          onConnectionLost: _this.onConnectionLost,
-          onLogin: _this.onLogin,
-          onSocketError: _this.onSocketError
-        }
+      this.$http.options.crossOrigin = true;
+
+      // todo: In better life we have to get client config from some orchestrator
+      //this.$http.post('http://localhost:9008/api/get-cell-endpoint').then(function (response) {
+      //  console.log(response.data);
+      //  if(response.data && response.data.error == false) {
+          setTimeout(function () {
+            // todo: Create config for Play.io client and provide some handlers
+            // var config = {
+            //   host: response.data.data.ip,
+            //   port: response.data.data.port,
+            //   zone: "rps",
+            //   debug: true,
+            //   onResponse: _this.onResponse,
+            //   onConnectionLost: _this.onConnectionLost,
+            //   onLogin: _this.onLogin,
+            //   onSocketError: _this.onSocketError
+            // }
 
 
-        _this.client = new ZiggyClient(config);
-        _this.client.init();
-        _this.client.token = window.rps_token;
-        _this.client.connect();
-        },2000);
+            // todo: Create Play.io client and start connecting
+            //_this.client = new ZiggyClient(config,ds);
+            //_this.client.init();
+            //_this.client.token = window.rps_token;
+            //_this.client.connect();
+          }, 2000);
+      //   }
+      // }).catch(function(err){
+      //   console.log(err);
+      // });
+
+
     },
     sit:function(bet){
-      this.client.sit(bet);
+      try{this.client.sit(bet);}catch(err){console.log(err)}
       this.$store.commit('sit',bet);
     },
     leave:function(bet){
-      this.client.leave();
+      try{this.client.leave();}catch(err){console.log(err)}
       this.$store.commit('leave');
     }
 

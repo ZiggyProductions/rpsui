@@ -6,11 +6,34 @@ export default new Vuex.Store({
         me:{id:0,name:'Eminem',avatar:'',wins_today:15,wins_total:515,cards:{enabled:false,choice:undefined}},
         opponent:{id:0,name:'waiting for opponent',active:false,avatar:''},
         game:{score:'3:8',winner:1,last:{opponent:'paper',me:'scissors'},message:'waiting for opponent'},
-        game_state:'intro',
+        game_state:'inplay',
         popup_help: false,
         message: {show:false}
     },
     mutations: {
+        devcall(state,param){
+          // убираем попапы чтобы не мешали
+          state.popup_help = false;
+          state.message.show = false;
+
+          switch(param.action){
+            case 'noconn':
+              state.message = {show:true, heading:param.heading || 'Connection lost',body: param.body || 'Reconnecting..'}
+              break;
+            case 'help':
+              state.popup_help = true;
+              break;
+            case 'table':
+              state.game_state = 'inplay';
+              break;
+            case 'lobby':
+              state.game_state = 'inlobby';
+              break;
+            case 'intro':
+              state.game_state = 'intro';
+              break;
+          }
+        },
         me(state,param){
             state.me.name = param.get('username');
             state.me.id = param.get('id');
@@ -31,7 +54,7 @@ export default new Vuex.Store({
             state.opponent = {id:0,name:'waiting for opponent',active:false,avatar:''}
             state.game.winner=0;
             state.game.last=undefined;
-            state.game.message='opponent has left the game, waiting for opponent';
+            state.game.message='opponent has left the game, waiting for next opponent';
         },
         sit(state,param){
             state.game_state = 'inplay';

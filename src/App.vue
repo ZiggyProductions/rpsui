@@ -7,6 +7,7 @@
       <Help v-if="popup_help"/>
       <Message v-if="message"/>
     </div>
+    <DeveloperLinks v-if="true"/>
   </div>
 </template>
 
@@ -16,11 +17,12 @@ import GameTable from './components/GameTable'
 import FooterLinks from './components/FooterLinks'
 import Help from './components/Help'
 import Message from './components/Message'
+import DeveloperLinks from './components/DeveloperLinks'
 
 export default {
   name: 'rps-inner-app',
   components: {
-    Lobby, GameTable, FooterLinks, Help, Message
+    Lobby, GameTable, FooterLinks, Help, Message, DeveloperLinks
   },
   computed: {
       count : function(){return this.$store.state.count},
@@ -38,7 +40,7 @@ export default {
 <style>
   body {padding-top: 20px;}
   #rps-inner-app{
-    margin-top:60px;
+    margin-top:0px;
     background-image: url('assets/bg-min.png');
     background-repeat: no-repeat;
     width: 1030px;

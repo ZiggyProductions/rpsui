@@ -2,27 +2,47 @@
  * Created by GAZ on 6/26/16.
  */
 
-var ZiggyClient = function ZiggyClient(config){
+
+var ZiggyClient = function ZiggyClient(config,ds){
+    this.ds = ds;
     this.config = config;
     this.sfs = null;
 }
 
 ZiggyClient.prototype = {
     init:function(){
-        this.sfs = new SFS2X.SmartFox(this.config);
-        this.sfs.logger.level = SFS2X.LogLevel.DEBUG;
+      console.log(this.config);
+      this.client = this.ds(this.config.host+':'+this.config.port).login({},function(r){
+        console.log(r);
+      });
 
-        // Add event listeners
-        this.sfs.addEventListener(SFS2X.SFSEvent.CONNECTION, this.onConnection, this);
-        this.sfs.addEventListener(SFS2X.SFSEvent.USER_EXIT_ROOM, this.onRoomExited, this);
-        this.sfs.addEventListener(SFS2X.SFSEvent.CONNECTION_LOST, this.config.onConnectionLost, this);
-        this.sfs.addEventListener(SFS2X.SFSEvent.LOGIN_ERROR, this.onLoginError, this);
-        this.sfs.addEventListener(SFS2X.SFSEvent.LOGIN, this.config.onLogin, this);
-        this.sfs.addEventListener(SFS2X.SFSEvent.ROOM_JOIN, this.onRoomJoin, this);
-        this.sfs.addEventListener(SFS2X.SFSEvent.LOGOUT, this.onLogout, this);
-        this.sfs.addEventListener(SFS2X.SFSEvent.EXTENSION_RESPONSE, this.config.onResponse, this);
-        this.sfs.addEventListener(SFS2X.SFSEvent.SOCKET_ERROR, this.config.onSocketError, this);
-        trace("SmartFox API version: " + this.sfs.version);
+      this.client.on( 'connectionStateChanged', connectionState => {
+        console.log(connectionState);
+        // connectionStateIndicator.removeClass( 'good neutral bad' );
+        // if( connectionState === 'OPEN' ) {
+        //   connectionStateIndicator.addClass( 'good' );
+        // } else if( connectionState === 'OPEN' || connectionState === 'ERROR' ) {
+        //   connectionStateIndicator.addClass( 'bad' );
+        // } else {
+        //   connectionStateIndicator.addClass( 'neutral' );
+        // }
+      });
+
+
+        // this.sfs = new SFS2X.SmartFox(this.config);
+        // this.sfs.logger.level = SFS2X.LogLevel.DEBUG;
+        //
+        // // Add event listeners
+        // this.sfs.addEventListener(SFS2X.SFSEvent.CONNECTION, this.onConnection, this);
+        // this.sfs.addEventListener(SFS2X.SFSEvent.USER_EXIT_ROOM, this.onRoomExited, this);
+        // this.sfs.addEventListener(SFS2X.SFSEvent.CONNECTION_LOST, this.config.onConnectionLost, this);
+        // this.sfs.addEventListener(SFS2X.SFSEvent.LOGIN_ERROR, this.onLoginError, this);
+        // this.sfs.addEventListener(SFS2X.SFSEvent.LOGIN, this.config.onLogin, this);
+        // this.sfs.addEventListener(SFS2X.SFSEvent.ROOM_JOIN, this.onRoomJoin, this);
+        // this.sfs.addEventListener(SFS2X.SFSEvent.LOGOUT, this.onLogout, this);
+        // this.sfs.addEventListener(SFS2X.SFSEvent.EXTENSION_RESPONSE, this.config.onResponse, this);
+        // this.sfs.addEventListener(SFS2X.SFSEvent.SOCKET_ERROR, this.config.onSocketError, this);
+        // trace("SmartFox API version: " + this.sfs.version);
     },
 
     onConnection:function(event)
@@ -74,7 +94,7 @@ ZiggyClient.prototype = {
     // },
 
     connect: function(){
-        this.sfs.connect();
+        //this.ds.login();
     },
 
     isConnected: function(){
