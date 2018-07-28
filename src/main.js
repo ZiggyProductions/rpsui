@@ -178,9 +178,9 @@ window.rpsapp = new Vue({
             //_this.client.connect();
 
             _this.client = new Client({
-              host: '212.47.245.185',
-              port: 5555,
-              secure: false
+              host: 'steadfast.tech/pmbet',
+              port: 443,
+              secure: true
             });
 
             _this.client.onPlayerSubscribe(data => {

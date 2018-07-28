@@ -10,7 +10,7 @@ export default new Vuex.Store({
     state: {
         me:{id:0,name:'Eminem',avatar:'',wins_today:15,wins_total:515,cards:{enabled:false,choice:undefined}},
         opponent:{id:0,name:'waiting for opponent',active:false,avatar:''},
-        game:{score:'0:0',winner:0,last:{opponent:'',me:''},message:'waiting for opponent'},
+        game:{score:'0:0',winner:'nobody',last:{opponent:'',me:''},message:'waiting for opponent'},
         game_state:'intro',
         popup_help: false,
         message: {show:true,heading:'CONNECTING',body:'please wait'}
