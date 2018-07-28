@@ -52,14 +52,14 @@ export default new Vuex.Store({
             state.opponent.active = param.active;
             if(param.active) {
                 state.game.message = '';
-                state.game.winner=0;
+                state.game.winner='nobody';
                 state.game.last=undefined;
                 state.me.cards.enabled = true;
             }
         },
         opleft(state){
             state.opponent = {id:0,name:'waiting for opponent',active:false,avatar:''}
-            state.game.winner=0;
+            state.game.winner='nobody';
             state.game.last=undefined;
             state.game.message='opponent has left the game, waiting for next opponent';
             state.me.cards.enabled = false;
@@ -68,7 +68,7 @@ export default new Vuex.Store({
         sit(state,param){
             state.game_state = 'inplay';
             state.opponent = {id:0,name:'waiting for opponent',active:false,avatar:''}
-            state.game.winner=0;
+            state.game.winner='nobody';
             state.game.last=undefined;
             state.game.message = 'waiting for opponent';
             state.me.cards.enabled = false;
@@ -77,7 +77,7 @@ export default new Vuex.Store({
         leave(state){
             state.game_state = 'inlobby';
             state.opponent = {id:0,name:'waiting for opponent',active:false,avatar:''}
-            state.game.winner=0;
+            state.game.winner='nobody';
             state.game.last=undefined;
             state.game.message = '';
             state.me.cards.enabled = false;
@@ -107,7 +107,7 @@ export default new Vuex.Store({
           setTimeout(()=>{
             state.game.last = undefined;
             state.me.cards.choice = undefined;
-            state.game.winner = 0;
+            state.game.winner = 'nobody';
             state.me.cards.enabled = true;
           },2000)
         },
