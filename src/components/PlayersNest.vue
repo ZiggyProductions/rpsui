@@ -43,12 +43,12 @@
         position: absolute;
         top:0px;
         width:180px;
-        height:650px;
+        height:630px;
         text-align: left;
         background-image: url('../assets/vs-min.png');
         background-repeat: no-repeat;
         background-position-x: 75px;
-        background-position-y: 180px;
+        background-position-y: 150px;
     }
     .players-wrapper{
         width:100%;
@@ -57,13 +57,13 @@
     }
     .player-top{
         position:absolute;
-        top:50px;
+        top:20px;
         height:100px;
         width:100%;
     }
     .player-bottom{
         position:absolute;
-        bottom:50px;
+        bottom:80px;
         height:100px;
         width:100%;
     }
@@ -136,7 +136,7 @@
 
     .btn-wrapper{
         position: absolute;
-        bottom:10px;
+        bottom:40px;
         width:100%;
         text-align: center;
     }

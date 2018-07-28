@@ -3,8 +3,12 @@
 import Vue from 'vue'
 import App from './App'
 import store from './store'
+import _ from 'underscore';
 //import ds from 'deepstream.io-client-js'
 import VueResource from 'vue-resource';
+//import Client from '@gamefast/ching-sdk';
+import Client from '../static/lib/ching-sdk/src/index';
+
 Vue.use(VueResource);
 Vue.config.productionTip = false
 
@@ -18,31 +22,91 @@ window.rpsapp = new Vue({
   created: function(){
     //console.log('TOKEN:',window.rps_token)
     var _this = this;
+    _this.figures = {rock:0,scissors:1,paper:2};
+    _this.testplayers = function(id){
+      var tp = {
+        1: {
+          id: 1,
+          name: 'Eminem',
+          avatar: '',
+          wins_today: 15,
+          wins_total: 515,
+          cards: {enabled: false, choice: undefined}
+        },
+        2: {
+          id: 2,
+          name: '2pac',
+          avatar: '',
+          wins_today: 25,
+          wins_total: 535,
+          cards: {enabled: false, choice: undefined}
+        },
+        3: {
+          id: 3,
+          name: 'Snoop Dogg',
+          avatar: '',
+          wins_today: 5,
+          wins_total: 45,
+          cards: {enabled: false, choice: undefined}
+        },
+        4: {
+          id: 4,
+          name: 'Dr. Dre',
+          avatar: '',
+          wins_today: 75,
+          wins_total: 495,
+          cards: {enabled: false, choice: undefined}
+        },
+      }
+
+      if(tp.hasOwnProperty(id)){
+        return tp[id];
+      }else{
+        return {
+          id: id,
+          name: 'Anonymous',
+          avatar: '',
+          wins_today: 0,
+          wins_total: 0,
+          cards: {enabled: false, choice: undefined}}
+      }
+    }
     this.init();
-    bus.$on('sit',function(bet){
-      _this.sit(bet);
+    bus.$on('play',function(figure){
+      _this.play(figure);
     })
-    bus.$on('leave',function(bet){
-      _this.leave(bet);
+    bus.$on('sit',function(kind){
+      _this.sit(kind);
+    })
+    bus.$on('leave',function(){
+      _this.leave();
     })
   },
   methods: {
-    onConnectionLost: function(event)
+    onConnecting: function()
     {
-      trace("You have been disconnected; reason is: " + event.reason);
-      this.$store.commit('connection_status',{show:true})
-      setTimeout(this.init,2000);
+      trace("Connecting");
+      this.$store.commit('connecting',{show:true})
     },
-    onLogin:function(event)
+    onConnect: function()
     {
-      if(null != event.data){
-        trace("Login successful!" +
-            "\n\tZone: " + event.zone +
-            "\n\tUser: " + event.user +
-            "\n\tData: " + JSON.stringify(event.data));
+      trace("Connected");
+      this.$store.commit('connecting',{show:false});
+    },
+    onDisconnect: function()
+    {
+      trace("You have been disconnected;");
+      this.$store.commit('connection_status',{show:true})
+    },
+    onLogin:function(player_id)
+    {
+      if(null != player_id){
+        trace("Login successful!");
+        this.$store.commit('connecting',{show:false});
+        //this.$store.commit('connection_status',{show:false})
 
-        this.$store.commit('connection_status',{show:false})
-        this.$store.commit('me',event.data.get('custom'));
+        // Временное решение для теста, в дальнейшем надо все получать из Центра Управления Полетами
+        this.$store.commit('me',_.clone(this.testplayers(player_id)));
         this.$store.commit('leave'); // to lobby
       }else{
         this.$store.commit('connection_status',{show:true,heading:'Session expired',body:'please login'})
@@ -85,6 +149,7 @@ window.rpsapp = new Vue({
 
     },
     init:function (binding) {
+      trace('init')
       var _this = this;
       this.$http.options.crossOrigin = true;
 
@@ -111,6 +176,72 @@ window.rpsapp = new Vue({
             //_this.client.init();
             //_this.client.token = window.rps_token;
             //_this.client.connect();
+
+            _this.client = new Client({
+              host: '212.47.245.185',
+              port: 5555,
+              secure: false
+            });
+
+            _this.client.onPlayerSubscribe(data => {
+              console.log('======SUBSCRIBE========')
+              console.log(data,_this.client);
+              console.log('=======================');
+              _this.client.ready(true);
+            });
+
+            _this.client.onGameStart((data) => {
+              console.log("===========Game Start============");
+              console.log(data)
+              _this.$store.commit('prepare');
+            });
+
+            _this.client.onGameFinish(data => {
+              console.log("===========Game Finish============");
+              console.log(data)
+              _this.$store.commit('result',data);
+            });
+
+            _this.client.onPlayerLeave(player => {
+              console.log('===========ROOM PLAYER LEAVE========');
+              console.log(player);
+            });
+
+            _this.client.onPlayerReady(player => {
+              console.log('===========ROOM PLAYER READY========');
+              console.log(player);
+              if(player.playerId != _this.$store.state.me.id) {
+                var oponent = _.clone(_this.testplayers(player.playerId));
+                oponent.active = true;
+                _this.$store.commit('op', oponent);
+              }
+            });
+
+            _this.client.onPlayerJoinRoom(({ status }) => {
+              console.log('============PLAYER JOIN ROOM==========');
+              console.log(status);
+              // todo: ask to provide room kind
+              _this.$store.commit('sit',/*kind*/ 'fast');
+            });
+
+            _this.client.onMatchFinish(() => {
+              console.log('============ROOM MATCH FINISH==========');
+              _this.$store.commit('leave'); // to lobby
+            });
+
+            _this.client.onConnect(() => _this.onConnect());
+            _this.client.onDisconnect(() => _this.onDisconnect());
+
+
+            _this.$store.commit('connecting',{show:true});
+            async function login() {
+              await _this.client.login({ playerId: _this.getParameterByName('uid') || window.rps_uid , token: _this.getParameterByName('token') || window.rps_token });
+              _this.onLogin(_this.getParameterByName('uid') || window.rps_uid);
+            }
+            login();
+
+
+
           }, 2000);
       //   }
       // }).catch(function(err){
@@ -119,13 +250,33 @@ window.rpsapp = new Vue({
 
 
     },
-    sit:function(bet){
-      try{this.client.sit(bet);}catch(err){console.log(err)}
-      this.$store.commit('sit',bet);
+
+    play:function(figure){
+      try{
+        this.$store.commit('choice',figure)
+        trace(figure,this.figures[figure])
+        this.client.play({figure:this.figures[figure]});
+      }catch(err){console.log(err)}
     },
-    leave:function(bet){
-      try{this.client.leave();}catch(err){console.log(err)}
+    sit:function(kind){
+      try{this.client.joinRoom(kind);}catch(err){console.log(err)}
+    },
+    leave:function(){
+      try{this.client.leaveRoom();}catch(err){console.log(err)}
       this.$store.commit('leave');
+    },
+    getParameterByName:function (name, url) {
+      try {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+          results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+      } catch (err) {
+        return '';
+      }
     }
 
   }

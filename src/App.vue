@@ -7,7 +7,7 @@
       <Help v-if="popup_help"/>
       <Message v-if="message"/>
     </div>
-    <DeveloperLinks v-if="true"/>
+    <!--<DeveloperLinks v-if="true"/>-->
   </div>
 </template>
 
@@ -38,13 +38,12 @@ export default {
 </script>
 
 <style>
-  body {padding-top: 20px;}
   #rps-inner-app{
-    margin-top:0px;
+    margin-top:0;
     background-image: url('assets/bg-min.png');
     background-repeat: no-repeat;
     width: 1030px;
-    height: 654px;
+    height: 634px;
     border: solid 2px rgba(74,104,133,.2);
     border-radius: 5px;
     position: relative;

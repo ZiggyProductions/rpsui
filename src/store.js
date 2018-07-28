@@ -1,14 +1,19 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
+const figuremap = {
+    0: 'rock',
+    1: 'scissors',
+    2: 'paper'
+}
 export default new Vuex.Store({
     state: {
         me:{id:0,name:'Eminem',avatar:'',wins_today:15,wins_total:515,cards:{enabled:false,choice:undefined}},
         opponent:{id:0,name:'waiting for opponent',active:false,avatar:''},
-        game:{score:'3:8',winner:1,last:{opponent:'paper',me:'scissors'},message:'waiting for opponent'},
-        game_state:'inplay',
+        game:{score:'0:0',winner:0,last:{opponent:'',me:''},message:'waiting for opponent'},
+        game_state:'intro',
         popup_help: false,
-        message: {show:false}
+        message: {show:true,heading:'CONNECTING',body:'please wait'}
     },
     mutations: {
         devcall(state,param){
@@ -35,9 +40,10 @@ export default new Vuex.Store({
           }
         },
         me(state,param){
-            state.me.name = param.get('username');
-            state.me.id = param.get('id');
-            state.me.avatar = param.get('avatar');
+            state.me = param;
+        },
+        prepare(state,first_round){
+          state.me.cards.choice = undefined;
         },
         op(state,param){
             state.opponent.name = param.name;
@@ -48,6 +54,7 @@ export default new Vuex.Store({
                 state.game.message = '';
                 state.game.winner=0;
                 state.game.last=undefined;
+                state.me.cards.enabled = true;
             }
         },
         opleft(state){
@@ -55,6 +62,8 @@ export default new Vuex.Store({
             state.game.winner=0;
             state.game.last=undefined;
             state.game.message='opponent has left the game, waiting for next opponent';
+            state.me.cards.enabled = false;
+            state.me.cards.choice = undefined;
         },
         sit(state,param){
             state.game_state = 'inplay';
@@ -62,6 +71,8 @@ export default new Vuex.Store({
             state.game.winner=0;
             state.game.last=undefined;
             state.game.message = 'waiting for opponent';
+            state.me.cards.enabled = false;
+            state.me.cards.choice = undefined;
         },
         leave(state){
             state.game_state = 'inlobby';
@@ -69,6 +80,7 @@ export default new Vuex.Store({
             state.game.winner=0;
             state.game.last=undefined;
             state.game.message = '';
+            state.me.cards.enabled = false;
         },
         popup(state,param){
             switch(param.kind) {
@@ -78,13 +90,41 @@ export default new Vuex.Store({
             }
         },
         choice(state,param){
-            if(state.me.cards.enabled)
-                state.me.cards.choice = param;
+            if(state.me.cards.enabled) {
+              state.me.cards.choice = param;
+              state.me.cards.enabled = false;
+            }
+        },
+        result(state,param){
+          state.me.cards.enabled = false;
+          state.game.winner = param.winnerID;
+          state.game.last = {
+            me: figuremap[param[state.me.id]],
+            opponent: figuremap[param[state.opponent.id]]
+          }
+
+          // preparing for next battle
+          setTimeout(()=>{
+            state.game.last = undefined;
+            state.me.cards.choice = undefined;
+            state.game.winner = 0;
+            state.me.cards.enabled = true;
+          },2000)
+        },
+        toggle_cards(state,param){
+            state.me.cards.enabled = param;
         },
         connection_status(state,param){
             console.log(param);
             if(param.show === true)
-                state.message = {show:true, heading:param.heading || 'Connection lost',body: param.body || 'Reconnecting..'}
+                state.message = {show:true, heading:param.heading || 'CONNECTION LOST',body: param.body || 'Reconnecting..'}
+            else
+                state.message = param;
+
+        },
+        connecting(state,param){
+            if(param.show === true)
+                state.message = {show:true, heading:param.heading || 'CONNECTING',body: param.body || 'please wait'}
             else
                 state.message = param;
 

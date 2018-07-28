@@ -7,8 +7,8 @@
             </svg>
             <div id="countdown-number"></div>
         </div>
-        <div v-if="both_played" class="middle-button top" v-bind:class="[last_played_opponent, { winner: winner == 2 }]"></div>
-        <div v-if="both_played" class="middle-button bottom" v-bind:class="[last_played_me, { winner: winner == 1 }]"></div>
+        <div v-if="both_played" class="middle-button top" v-bind:class="[last_played_opponent, { winner: winner_top }]"></div>
+        <div v-if="both_played" class="middle-button bottom" v-bind:class="[last_played_me, { winner: winner_bottom }]"></div>
     </div>
 </template>
 
@@ -18,6 +18,8 @@
         computed: {
             message : function(){return this.$store.state.game.message},
             winner : function(){return this.$store.state.game.winner},
+            winner_top : function(){return this.$store.state.game.winner == this.$store.state.opponent.id},
+            winner_bottom : function(){return this.$store.state.game.winner == this.$store.state.me.id},
             both_played : function(){return this.$store.state.game.last},
             last_played_opponent : function(){return this.$store.state.game.last.opponent},
             last_played_me : function(){return this.$store.state.game.last.me}

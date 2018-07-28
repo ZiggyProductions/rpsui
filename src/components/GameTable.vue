@@ -31,7 +31,7 @@
 <style scoped>
     #table{
         width: 1030px;
-        height: 654px;
+        height: 634px;
         position: absolute;
     }
 </style>

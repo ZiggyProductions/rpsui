@@ -2,38 +2,38 @@
     <div class="lobby-buttons">
         <div class="panel-s">
             <div class="coin-wrapper">
-                <img style="width:100px;height:100px;" src="../assets/coin-100.svg" @click="sit('mini')"/>
+                <img style="width:100px;height:100px;" src="../assets/coin-100.svg" @click="sit('fast')"/>
             </div>
             <div class="descr-wrapper">
                 <div class="descr-bet">Bet 100 tzs - Win 190 tzs</div>
                 <div class="descr-rake">Rake: 10 tzs</div>
             </div>
             <div class="btn-wrapper">
-                <button class="btn btn-play" @click="sit('mini')">NEXT</button>
+                <button class="btn btn-play" @click="sit('fast')">NEXT</button>
             </div>
         </div>
         <div class="panel-s m30">
             <div class="coin-wrapper">
-                <img style="width:100px;height:100px;" src="../assets/coin-300.svg" @click="sit('regular')"/>
+                <img style="width:100px;height:100px;" src="../assets/coin-300.svg" @click="sit('fast')"/>
             </div>
             <div class="descr-wrapper">
                 <div class="descr-bet">Bet 300 tzs - Win 580 tzs</div>
                 <div class="descr-rake">Rake: 20 tzs</div>
             </div>
             <div class="btn-wrapper">
-                <button class="btn btn-play" @click="sit('regular')">NEXT</button>
+                <button class="btn btn-play" @click="sit('fast')">NEXT</button>
             </div>
         </div>
         <div class="panel-s">
             <div class="coin-wrapper">
-                <img style="width:100px;height:100px;" src="../assets/coin-500.svg" @click="sit('super')"/>
+                <img style="width:100px;height:100px;" src="../assets/coin-500.svg" @click="sit('fast')"/>
             </div>
             <div class="descr-wrapper">
                 <div class="descr-bet">Bet 500 tzs - Win 950 tzs</div>
                 <div class="descr-rake">Rake: 50 tzs</div>
             </div>
             <div class="btn-wrapper">
-                <button class="btn btn-play" @click="sit('super')">NEXT</button>
+                <button class="btn btn-play" @click="sit('fast')">NEXT</button>
             </div>
         </div>
     </div>

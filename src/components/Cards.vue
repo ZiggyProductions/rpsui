@@ -14,7 +14,9 @@
             choice: function(){return this.$store.state.me.cards.choice}
         },
         methods:{
-            make_choice: function(param){this.$store.commit('choice',param)}
+            make_choice: function(param){
+              bus.$emit('play', param)
+            }
         }
     }
 </script>
